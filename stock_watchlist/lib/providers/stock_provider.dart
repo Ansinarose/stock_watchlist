@@ -1,10 +1,8 @@
-// import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
-import 'package:stock_watchlist/repositories/mock_stock_repository.dart';
 import 'package:stock_watchlist/repositories/stock_repositories.dart';
-
-
 import '../models/stock_model.dart';
+
+
 import '../services/local_storage_service.dart';
 
 class StockProvider with ChangeNotifier {
@@ -34,30 +32,6 @@ class StockProvider with ChangeNotifier {
       notifyListeners();
     }
   }
-// class StockProvider with ChangeNotifier {
-//   final MockStockRepository _repository = MockStockRepository();
-//   final LocalStorageService _localStorageService = LocalStorageService();
-
-//   List<StockModel> _searchResults = [];
-//   List<StockModel> _watchlist = [];
-
-//   List<StockModel> get searchResults => _searchResults;
-//   List<StockModel> get watchlist => _watchlist;
-
-//   StockProvider() {
-//     _loadWatchlist();
-//   }
-
-//   Future<void> searchStocks(String query) async {
-//     try {
-//       _searchResults = await _repository.searchStocks(query);
-//       notifyListeners();
-//     } catch (e) {
-//       print('Error searching stocks: $e');
-//       _searchResults = [];
-//       notifyListeners();
-//     }
-//   }
 
   void addToWatchlist(StockModel stock) {
     _localStorageService.addStockToWatchlist(stock);

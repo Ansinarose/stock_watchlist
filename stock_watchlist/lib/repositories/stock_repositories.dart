@@ -1,20 +1,10 @@
-// import '../models/stock_model.dart';
-// import '../services/api_service.dart';
-
-// class StockRepository {
-//   final ApiService _apiService = ApiService();
-
-//   Future<List<StockModel>> searchStocks(String query) async {
-//     return await _apiService.fetchStockData(query);
-//   }
-// }
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:hive/hive.dart';
 import '../models/stock_model.dart';
 
 class StockRepository {
-  final String apiKey = 'WYMOSJXVLA17A5QB'; // Your API key
+  final String apiKey = 'WYMOSJXVLA17A5QB';
   final String baseUrl = 'https://www.alphavantage.co/query';
   final String cacheBoxName = 'stockSearchCache';
 
@@ -32,9 +22,6 @@ class StockRepository {
         Uri.parse('$baseUrl?function=SYMBOL_SEARCH&keywords=$query&apikey=$apiKey')
       );
 
-      print('API Response Status Code: ${response.statusCode}');
-      print('API Response Body: ${response.body}');
-
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
         final List<dynamic>? matches = data['bestMatches'];
@@ -44,11 +31,15 @@ class StockRepository {
           return [];
         }
         
-        List<StockModel> results = matches.map((match) => StockModel(
-          name: match['2. name'] ?? 'Unknown',
-          symbol: match['1. symbol'] ?? 'Unknown',
-          price: 'N/A',
-        )).toList();
+        List<StockModel> results = await Future.wait(matches.map((match) async {
+          String symbol = match['1. symbol'] ?? 'Unknown';
+          String price = await getLatestPrice(symbol);
+          return StockModel(
+            name: match['2. name'] ?? 'Unknown',
+            symbol: symbol,
+            price: price,
+          );
+        }));
 
         await box.put(query, results.map((e) => e.toJson()).toList());
         

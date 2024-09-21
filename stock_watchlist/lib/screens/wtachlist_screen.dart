@@ -1,33 +1,7 @@
-// import 'package:flutter/material.dart';
-// import 'package:provider/provider.dart';
-// import '../providers/stock_provider.dart';
-// import '../widgets/stock_tile.dart';
-
-// class WatchlistScreen extends StatelessWidget {
-//   const WatchlistScreen({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final stockProvider = Provider.of<StockProvider>(context);
-
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text('Watchlist'),
-//       ),
-//       body: stockProvider.watchlist.isEmpty
-//           ? const Center(child: Text('No stocks in watchlist'))
-//           : ListView.builder(
-//               itemCount: stockProvider.watchlist.length,
-//               itemBuilder: (context, index) {
-//                 final stock = stockProvider.watchlist[index];
-//                 return StockTile(stock: stock, isWatchlist: true);
-//               },
-//             ),
-//     );
-//   }
-// }
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:stock_watchlist/common/constants/colors.dart';
+import 'package:stock_watchlist/common/constants/custom_appbar.dart';
 import '../providers/stock_provider.dart';
 
 class WatchlistScreen extends StatelessWidget {
@@ -36,30 +10,85 @@ class WatchlistScreen extends StatelessWidget {
     final stockProvider = Provider.of<StockProvider>(context);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Watchlist'),
+      backgroundColor: AppConstants.scaffoldBackgroundColor,
+      appBar: CustomAppBar(
+        title: 'Watchlist',
       ),
-      body: ListView.builder(
-        itemCount: stockProvider.watchlist.length,
-        itemBuilder: (context, index) {
-          final stock = stockProvider.watchlist[index];
-          return ListTile(
-            title: Text(stock.name),
-            subtitle: Text(stock.symbol),
-            trailing: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(stock.price),
-                IconButton(
-                  icon: Icon(Icons.delete),
-                  onPressed: () {
-                    stockProvider.removeFromWatchlist(stock);
-                  },
-                ),
-              ],
+      body: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Table(
+            border: TableBorder.all(
+              color: Colors.black, // Color for the borders
+              width: 1,            // Thickness of the borders
             ),
-          );
-        },
+            columnWidths: const {
+              0: FlexColumnWidth(2), // Adjust width of the company name column
+              1: FlexColumnWidth(1.5), // Adjust width of the share price column
+              2: FlexColumnWidth(1), // Adjust width of the actions column
+            },
+            children: [
+              // Header Row
+              TableRow(
+                decoration: BoxDecoration(color: Colors.grey.shade300),
+                children: [
+                  _buildTableHeader('Company'),
+                  _buildTableHeader('Share Price'),
+                  _buildTableHeader(''),
+                ],
+              ),
+              // Data Rows
+              ...stockProvider.watchlist.map((stock) {
+                return TableRow(
+                  children: [
+                    _buildTableCell(stock.name),
+                    _buildTableCell(stock.price),
+                    _buildTableCellWithIcon(
+                      Icons.cancel_outlined,
+                      () {
+                        stockProvider.removeFromWatchlist(stock);
+                      },
+                    ),
+                  ],
+                );
+              }).toList(),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  // Helper for building table headers
+  Widget _buildTableHeader(String text) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        text,
+        style: TextStyle(fontWeight: FontWeight.bold),
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  // Helper for building table cells with text
+  Widget _buildTableCell(String text) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Text(
+        text,
+        textAlign: TextAlign.center,
+      ),
+    );
+  }
+
+  // Helper for building table cells with an icon button
+  Widget _buildTableCellWithIcon(IconData icon, VoidCallback onPressed) {
+    return Center(
+      child: IconButton(
+        icon: Icon(icon),
+        onPressed: onPressed,
       ),
     );
   }
