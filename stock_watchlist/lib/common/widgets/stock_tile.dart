@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../models/stock_model.dart';
-import '../providers/stock_provider.dart';
+import 'package:stock_watchlist/models/stock_model.dart';
+import 'package:stock_watchlist/providers/stock_provider.dart';
+
 
 class StockTile extends StatelessWidget {
   final StockModel stock;
@@ -19,7 +20,7 @@ class StockTile extends StatelessWidget {
 
     return ListTile(
       title: Text(stock.name),
-      subtitle: Text(stock.symbol),
+      subtitle: Text('\$${stock.price.isNotEmpty ? double.parse(stock.price).toStringAsFixed(2) : '0.00'}'),
       trailing: isWatchlist
           ? IconButton(
               icon: const Icon(Icons.remove_circle),
