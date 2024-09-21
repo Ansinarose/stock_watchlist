@@ -1,16 +1,31 @@
-# stock_watchlist
+# Stock Watchlist App
 
-A new Flutter project.
+A Flutter mobile application to track stock prices and maintain a personalized watchlist. The app uses the [Alpha Vantage API](https://www.alphavantage.co/) to fetch stock data, including company names and latest share prices. You can search for stocks, add them to a watchlist, and track the latest price information.
+
+## Features
+
+- **Home Screen**: 
+  - Search for stock companies using a search bar.
+  - Search results display matching companies and their latest stock prices, fetched from the Alpha Vantage API.
+  - Ability to add stocks to a watchlist.
+  
+- **Watchlist Screen**:
+  - View a list of saved stocks along with their current prices.
+  - Remove stocks from the watchlist.
+  
+- **Local Storage**: 
+  - Uses `Hive` for local storage to persist the user's watchlist data.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+### Prerequisites
+- [Flutter](https://flutter.dev/) installed on your local machine.
+- An API key from [Alpha Vantage](https://www.alphavantage.co/).
+- [Hive](https://pub.dev/packages/hive) package for local storage.
 
-A few resources to get you started if this is your first Flutter project:
+### Installation
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Ansinarose/stock_watchlist
+   cd stock_watchlist
